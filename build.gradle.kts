@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "2.2.0"
+    application
 }
 
 group = "org.example"
@@ -10,12 +11,15 @@ repositories {
 }
 
 dependencies {
+    implementation(kotlin("stdlib"))
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
     testImplementation(kotlin("test"))
 }
 
 tasks.test {
     useJUnitPlatform()
 }
+
 kotlin {
-    jvmToolchain(24)
+    jvmToolchain(24) // puedes usar 17 si prefieres compatibilidad máxima
 }

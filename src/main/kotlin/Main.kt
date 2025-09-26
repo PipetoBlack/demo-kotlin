@@ -1,16 +1,40 @@
-package org.example
+import kotlinx.coroutines.runBlocking
+import service.*
+import org.example.model.EstadoReserva
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-fun main() {
-    val name = "Kotlin"
-    //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-    // to see how IntelliJ IDEA suggests fixing it.
-    println("Hello, " + name + "!")
+fun main() = runBlocking {
+    println("=== Bienvenido a TravelGo ===")
 
-    for (i in 1..5) {
-        //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-        // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-        println("i = $i")
-    }
+    // 1) Inicializar catálogo
+    val catalogo = inicializarCatalogo()
+    imprimirCatalogo(catalogo)
+
+    // 2) Simular selección de viajes (ejemplo: Atacama + Buenos Aires)
+    val seleccion = listOf(catalogo[0], catalogo[2])
+
+    // 3) Definir tipo de cliente
+    val tipoCliente = TipoCliente.VIP
+
+    // 4) Crear reserva y calcular resumen
+    val reserva = Reserva(seleccion, tipoCliente)
+    val resumen = calcularResumen(reserva)
+
+    println("\n--- Resumen de Reserva ---")
+    println("Subtotal: $${"%.2f".format(resumen.subtotal)}")
+    println("Descuento (${tipoCliente}): $${"%.2f".format(resumen.descuento)}")
+    println("Impuestos (19%): $${"%.2f".format(resumen.impuestos)}")
+    println("Total: $${"%.2f".format(resumen.total)}")
+
+    // 5) Procesar reserva (simula 3 segundos de espera)
+    println("\nProcesando reserva...")
+    val estado = procesarReserva(reserva)
+    println("Estado de la reserva: $estado")
+
+    // 6) Generar reporte de ventas
+    val reporte = generarReporteIngresos(seleccion)
+    println("\n--- Reporte de Ventas ---")
+    println("Ingresos totales: $${"%.2f".format(reporte.totalIngresos)}")
+    println("Ingresos nacionales: $${"%.2f".format(reporte.ingresosNacionales)}")
+    println("Ingresos internacionales: $${"%.2f".format(reporte.ingresosInternacionales)}")
+    println("Viajes cortos (<=3 días): ${reporte.viajesCortos.joinToString()}")
 }
